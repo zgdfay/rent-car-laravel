@@ -1,0 +1,119 @@
+[
+    {
+        "id": 1,
+        "name": "Toyota All New Rush",
+        "category": "SUV",
+        "price": "Rp 400.000",
+        "image": "/assets/car-images/all-new-rush.png",
+        "features": {
+            "seats": "7",
+            "transmission": "Otomatis",
+            "fuel": "Bensin"
+        },
+        "isAvailable": true
+    },
+    {
+        "id": 2,
+        "name": "Toyota All New Terios",
+        "category": "SUV",
+        "price": "Rp 400.000",
+        "image": "/assets/car-images/all-new-terios.png",
+        "features": {
+            "seats": "7",
+            "transmission": "Manual/Oto",
+            "fuel": "Bensin"
+        },
+        "isAvailable": false
+    },
+    {
+        "id": 3,
+        "name": "Honda CR-V Black",
+        "category": "SUV",
+        "price": "Rp 700.000",
+        "image": "/assets/car-images/crv-black.png",
+        "features": {
+            "seats": "7",
+            "transmission": "Otomatis",
+            "fuel": "Bensin"
+        },
+        "isAvailable": true
+    },
+    {
+        "id": 4,
+        "name": "Honda CR-V Brown",
+        "category": "SUV",
+        "price": "Rp 700.000",
+        "image": "/assets/car-images/crv-brown.png",
+        "features": {
+            "seats": "7",
+            "transmission": "Otomatis",
+            "fuel": "Bensin"
+        },
+        "isAvailable": true
+    },
+    {
+        "id": 5,
+        "name": "MG ZS Excite",
+        "category": "SUV Compact",
+        "price": "Rp 500.000",
+        "image": "/assets/car-images/mgz-zx-excite.png",
+        "features": {
+            "seats": "5",
+            "transmission": "Otomatis",
+            "fuel": "Bensin"
+        },
+        "isAvailable": true
+    },
+    {
+        "id": 6,
+        "name": "MG ZS Exclusive",
+        "category": "SUV Compact",
+        "price": "Rp 550.000",
+        "image": "/assets/car-images/mgz-zx-exclusive.png",
+        "features": {
+            "seats": "5",
+            "transmission": "Otomatis",
+            "fuel": "Bensin"
+        },
+        "isAvailable": true
+    },
+    {
+        "id": 7,
+        "name": "MG ZS White",
+        "category": "SUV Compact",
+        "price": "Rp 550.000",
+        "image": "/assets/car-images/new-mg-zs-white.png",
+        "features": {
+            "seats": "5",
+            "transmission": "Otomatis",
+            "fuel": "Bensin"
+        },
+        "isAvailable": false
+    },
+    {
+        "id": 8,
+        "name": "MG ZS Silver",
+        "category": "SUV Compact",
+        "price": "Rp 500.000",
+        "image": "/assets/car-images/new-mgz-zs-silver.png",
+        "features": {
+            "seats": "5",
+            "transmission": "Otomatis",
+            "fuel": "Bensin"
+        },
+        "isAvailable": true
+    },
+    {
+        "id": 9,
+        "name": "Nissan GT-R",
+        "category": "Sport",
+        "price": "Rp 3.500.000",
+        "image": "/assets/car-images/nissan-gtr.png",
+        "features": {
+            "seats": "4",
+            "transmission": "Otomatis",
+            "fuel": "Bensin"
+        },
+        "isAvailable": true
+    }
+]
