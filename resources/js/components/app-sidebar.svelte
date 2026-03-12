@@ -11,7 +11,7 @@
     const data = {
         user: {
             name: 'Admin',
-            email: 'admin@dsr.com',
+            email: 'admin@drs.com',
             avatar: '',
         },
         navMain: [
@@ -78,12 +78,12 @@
                     {#snippet child({ props })}
                         <Link href="/dashboard" {...props}>
                             <div
-                                class="flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-white font-extrabold text-sm"
+                                class="flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-sm font-extrabold text-white"
                             >
                                 D
                             </div>
                             <div class="grid flex-1 text-left text-sm leading-tight">
-                                <span class="truncate font-bold">DSR Rental</span>
+                                <span class="truncate font-bold">DRS Rental</span>
                                 <span class="truncate text-xs text-gray-500">Admin Panel</span>
                             </div>
                         </Link>

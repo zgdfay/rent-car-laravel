@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-    <title>Kontak Kami - DSR Rental</title>
+    <title>Kontak Kami - DRS Rental</title>
 </svelte:head>
 
 <AppLayout>
@@ -191,8 +191,8 @@
                                     <span class="text-lg">Email</span>
                                 </dt>
                                 <dd class="mt-2 text-base text-gray-600 dark:text-gray-400">
-                                    info@dsr-rental.com<br />
-                                    support@dsr-rental.com
+                                    info@drs-rental.com<br />
+                                    support@drs-rental.com
                                 </dd>
                             </div>
 

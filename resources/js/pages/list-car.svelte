@@ -64,7 +64,7 @@
 </script>
 
 <svelte:head>
-    <title>Daftar Mobil - DSR Rental</title>
+    <title>Daftar Mobil - DRS Rental</title>
 </svelte:head>
 
 <AppLayout>
