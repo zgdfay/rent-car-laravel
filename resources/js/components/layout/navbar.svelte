@@ -33,8 +33,11 @@
             href="/"
             class="text-primary flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white"
         >
-            <span class="text-2xl font-extrabold tracking-tight text-blue-600 dark:text-blue-400"
-                >DRS</span
+            <div class="">
+                <img src="/assets/images/logo-drs.png" alt="Logo" class="h-10 w-auto" />
+            </div>
+            <span class="text- blue-600 text-2xl font-extrabold tracking-tight dark:text-blue-400"
+                >DRS RENTAL</span
             >
         </Link>
     </div>
