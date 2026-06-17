@@ -27,7 +27,6 @@
 
     // Reactive filtered data
     $: filteredCars = (cars || []).filter((car) => {
-        if (!car.is_available) return false; // Hide unavailable cars
         const matchesSearch = car.name.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesCategory = selectedCategory === 'Semua' || car.category === selectedCategory;
         const matchesTransmission =
@@ -336,7 +335,9 @@
                         <div class="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 xl:grid-cols-3">
                             {#each displayedCars as car}
                                 <div
-                                    class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl dark:bg-gray-900 dark:ring-white/10"
+                                    class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-gray-900/5 transition-all duration-300 hover:shadow-2xl dark:bg-gray-900 dark:ring-white/10 {car.is_available
+                                        ? 'hover:-translate-y-2'
+                                        : 'opacity-80'}"
                                 >
                                     <div
                                         class="relative flex h-48 w-full items-end justify-center overflow-hidden bg-gray-200 p-4 pb-0 sm:h-56 dark:bg-gray-800"
@@ -346,7 +347,9 @@
                                             alt={car.name}
                                             on:error={(e) =>
                                                 (e.target.src = '/assets/images/hero-ferrari.png')}
-                                            class="h-full w-full object-contain object-bottom transition-transform duration-500 group-hover:scale-105"
+                                            class="h-full w-full object-contain object-bottom transition-transform duration-500 {car.is_available
+                                                ? 'group-hover:scale-105'
+                                                : 'grayscale'}"
                                         />
                                         <div
                                             class="absolute top-4 left-4 flex flex-col gap-2 sm:flex-row"
@@ -356,11 +359,21 @@
                                             >
                                                 {car.category}
                                             </span>
-
+                                            {#if !car.is_available}
+                                                <span
+                                                    class="inline-flex items-center rounded-full bg-red-100/90 px-3 py-1 text-xs font-medium text-red-700 shadow-sm ring-1 ring-red-600/10 backdrop-blur-sm dark:bg-red-900/90 dark:text-red-300"
+                                                >
+                                                    Sedang Disewa
+                                                </span>
+                                            {/if}
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-col p-5 sm:p-6">
+                                    <div
+                                        class="flex flex-col p-5 sm:p-6 {car.is_available
+                                            ? ''
+                                            : 'opacity-60 grayscale'}"
+                                    >
                                         <div class="mb-4 text-left">
                                             <h3
                                                 class="mb-2 text-xl font-bold text-gray-900 sm:text-2xl dark:text-white"
@@ -368,7 +381,9 @@
                                                 {car.name}
                                             </h3>
                                             <p
-                                                class="whitespace-nowrap text-xl font-bold text-blue-600 sm:text-2xl dark:text-blue-400"
+                                                class="text-xl font-bold sm:text-2xl {car.is_available
+                                                    ? 'text-blue-600 dark:text-blue-400'
+                                                    : 'text-gray-500 dark:text-gray-400'} whitespace-nowrap"
                                             >
                                                 {formatCurrency(car.price_per_day)}<span
                                                     class="text-sm font-normal text-gray-500 dark:text-gray-400"
@@ -416,13 +431,18 @@
                                         </div>
 
                                         <Link
-                                            href={`/booking/${car.id}`}
-                                            class="block w-full"
+                                            href={car.is_available ? `/booking/${car.id}` : '#'}
+                                            class="block w-full {car.is_available
+                                                ? ''
+                                                : 'cursor-not-allowed'}"
                                         >
                                             <Button
-                                                class="h-12 w-full rounded-xl bg-gray-900 font-semibold text-white shadow-sm hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+                                                disabled={!car.is_available}
+                                                class="h-12 w-full rounded-xl bg-gray-900 font-semibold text-white shadow-sm hover:bg-gray-800 disabled:bg-gray-200 disabled:text-gray-500 disabled:opacity-100 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 disabled:dark:bg-gray-800 disabled:dark:text-gray-600"
                                             >
-                                                Sewa Sekarang
+                                                {car.is_available
+                                                    ? 'Sewa Sekarang'
+                                                    : 'Tidak Tersedia'}
                                             </Button>
                                         </Link>
                                     </div>
