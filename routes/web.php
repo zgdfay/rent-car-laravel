@@ -39,7 +39,7 @@ Route::get('/dashboard', function () {
         'pending' => $bookings->where('status', 'pending')->count(),
         'approved' => $bookings->where('status', 'approved')->count(),
         'rejected' => $bookings->where('status', 'rejected')->count(),
-        'revenue' => $bookings->where('status', 'approved')->sum('total_price'),
+        'revenue' => $bookings->whereIn('status', ['approved', 'completed'])->sum('total_price'),
     ];
     return Inertia::render('dashboard', [
         'bookings' => $bookings->load('user'),

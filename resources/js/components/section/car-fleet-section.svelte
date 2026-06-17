@@ -4,6 +4,7 @@
     import { Users, Settings2, Zap } from "lucide-svelte";
 
     let { featuredCars = [] } = $props();
+    let availableFeaturedCars = $derived(featuredCars.filter(car => car.is_available));
 
     function formatCurrency(amount) {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
@@ -30,30 +31,25 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {#each featuredCars as car}
-                <div class="group relative flex flex-col bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 ring-1 ring-gray-900/5 dark:ring-white/10 {car.is_available ? 'hover:-translate-y-2' : 'opacity-80'}">
+            {#each availableFeaturedCars as car}
+                <div class="group relative flex flex-col bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 ring-1 ring-gray-900/5 dark:ring-white/10 hover:-translate-y-2">
                     <div class="relative h-48 sm:h-56 w-full overflow-hidden bg-gray-200 dark:bg-gray-800 p-4 pb-0 flex items-end justify-center">
                         <img 
                             src={car.image} 
                             alt={car.name}
                             on:error={(e) => e.target.src = '/assets/images/hero-ferrari.png'}
-                            class="h-full w-full object-contain object-bottom transition-transform duration-500 {car.is_available ? 'group-hover:scale-105' : 'grayscale'}"
+                            class="h-full w-full object-contain object-bottom transition-transform duration-500 group-hover:scale-105"
                         />
                         <div class="absolute top-4 left-4 flex gap-2 flex-col sm:flex-row">
                             <span class="inline-flex items-center rounded-full bg-white/90 dark:bg-gray-900/90 px-3 py-1 text-xs font-medium text-gray-900 dark:text-white backdrop-blur-sm shadow-sm ring-1 ring-black/5">
                                 {car.category}
                             </span>
-                            {#if !car.is_available}
-                                <span class="inline-flex items-center rounded-full bg-red-100/90 dark:bg-red-900/90 px-3 py-1 text-xs font-medium text-red-700 dark:text-red-300 backdrop-blur-sm shadow-sm ring-1 ring-red-600/10">
-                                    Sedang Disewa
-                                </span>
-                            {/if}
                         </div>
                     </div>
-                        <div class="flex flex-col p-5 sm:p-6 {car.is_available ? '' : 'opacity-60 grayscale'}">
+                        <div class="flex flex-col p-5 sm:p-6">
                             <div class="mb-4 text-left">
                                 <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">{car.name}</h3>
-                                <p class="text-xl sm:text-2xl font-bold {car.is_available ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'} whitespace-nowrap">{formatCurrency(car.price_per_day)}<span class="text-sm font-normal text-gray-500 dark:text-gray-400">/hr</span></p>
+                                <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap">{formatCurrency(car.price_per_day)}<span class="text-sm font-normal text-gray-500 dark:text-gray-400">/hr</span></p>
                             </div>
                         
                         <div class="grid grid-cols-3 gap-2 mt-auto pt-5 border-t border-gray-100 dark:border-gray-800 mb-6">
@@ -71,12 +67,11 @@
                             </div>
                         </div>
                         
-                        <Link href={car.is_available ? `/booking/${car.id}` : "#"} class="block w-full {car.is_available ? '' : 'cursor-not-allowed'}">
+                        <Link href={`/booking/${car.id}`} class="block w-full">
                             <Button 
-                                disabled={!car.is_available}
-                                class="w-full bg-gray-900 hover:bg-gray-800 text-white dark:bg-white dark:hover:bg-gray-100 dark:text-gray-900 rounded-xl h-12 shadow-sm font-semibold disabled:bg-gray-200 disabled:text-gray-500 disabled:dark:bg-gray-800 disabled:dark:text-gray-600 disabled:opacity-100"
+                                class="w-full bg-gray-900 hover:bg-gray-800 text-white dark:bg-white dark:hover:bg-gray-100 dark:text-gray-900 rounded-xl h-12 shadow-sm font-semibold"
                             >
-                                {car.is_available ? 'Sewa Sekarang' : 'Tidak Tersedia'}
+                                Sewa Sekarang
                             </Button>
                         </Link>
                     </div>

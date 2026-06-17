@@ -95,7 +95,7 @@
             </div>
         </div>
         <p class="text-2xl font-extrabold text-gray-900 dark:text-white">{formatCurrency(stats.revenue || 0)}</p>
-        <p class="text-xs text-gray-400 mt-1">Dari booking disetujui</p>
+        <p class="text-xs text-gray-400 mt-1">Booking disetujui & selesai</p>
     </div>
 </div>
 
