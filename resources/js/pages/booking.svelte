@@ -19,7 +19,7 @@
     import { Separator } from '@/components/ui/separator/index.js';
     import { router } from '@inertiajs/svelte';
 
-    let { car } = $props();
+    let { car, errors = {} } = $props();
 
     // Form State
     let name = $state('');
@@ -422,6 +422,17 @@
                                     </p>
                                 </div>
                             </div>
+
+                            {#if Object.keys(errors).length > 0}
+                                <div class="rounded-xl bg-red-50 p-4 border border-red-200">
+                                    <p class="text-sm font-semibold text-red-800 mb-2">Terjadi kesalahan:</p>
+                                    <ul class="list-disc pl-5 text-xs text-red-600">
+                                        {#each Object.values(errors) as error}
+                                            <li>{error}</li>
+                                        {/each}
+                                    </ul>
+                                </div>
+                            {/if}
 
                             <Button
                                 type="submit"
