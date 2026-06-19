@@ -86,16 +86,28 @@
         <p class="text-xs text-gray-400 mt-1">Booking aktif</p>
     </div>
 
-    <!-- Revenue -->
+    <!-- Revenue Active -->
     <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/10">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Pendapatan</p>
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Pendapatan Aktif</p>
+            <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <TrendingUp class="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            </div>
+        </div>
+        <p class="text-2xl font-extrabold text-gray-900 dark:text-white">{formatCurrency(stats.revenue_active || 0)}</p>
+        <p class="text-xs text-gray-400 mt-1">Booking disetujui</p>
+    </div>
+
+    <!-- Revenue Completed -->
+    <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/10">
+        <div class="flex items-center justify-between mb-3">
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Pendapatan Selesai</p>
             <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
                 <TrendingUp class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             </div>
         </div>
-        <p class="text-2xl font-extrabold text-gray-900 dark:text-white">{formatCurrency(stats.revenue || 0)}</p>
-        <p class="text-xs text-gray-400 mt-1">Booking disetujui & selesai</p>
+        <p class="text-2xl font-extrabold text-gray-900 dark:text-white">{formatCurrency(stats.revenue_completed || 0)}</p>
+        <p class="text-xs text-gray-400 mt-1">Booking selesai</p>
     </div>
 </div>
 

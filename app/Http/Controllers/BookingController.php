@@ -56,7 +56,7 @@ class BookingController extends Controller
     public function success(Booking $booking)
     {
         // Ensure the user can only see their own booking
-        if ($booking->user_id !== Auth::id()) {
+        if ($booking->user_id != Auth::id()) {
             abort(403);
         }
 
