@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
             'bookings' => $bookings,
         ]);
     })->name('riwayat-order');
+    Route::post('/bookings/{booking}/return-proof', [BookingController::class, 'uploadReturnProof'])->name('booking.returnProof');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

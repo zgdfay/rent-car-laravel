@@ -14,6 +14,7 @@ class Booking extends Model
     public const STATUS_APPROVED = 'approved';
     public const STATUS_REJECTED = 'rejected';
     public const STATUS_COMPLETED = 'completed';
+    public const STATUS_PENDING_PENALTY = 'pending_penalty';
 
     protected $fillable = [
         'user_id',
@@ -31,6 +32,7 @@ class Booking extends Model
         'late_fee',
         'damage_fee',
         'payment_proof',
+        'return_payment_proof',
         'status',
         'return_date',
     ];

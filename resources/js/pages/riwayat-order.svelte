@@ -1,9 +1,9 @@
 <script>
     import Head from '@/components/head.svelte';
     import AppLayout from '@/layouts/app-layout.svelte';
-    import { Car, Calendar, CreditCard, CheckCircle2, Clock, XCircle, AlertCircle, ShoppingBag } from 'lucide-svelte';
+    import { Car, Calendar, CreditCard, CheckCircle2, Clock, XCircle, AlertCircle, ShoppingBag, Upload, FileText, Info } from 'lucide-svelte';
     import { Button } from "@/components/ui/button/index.js";
-    import { Link } from '@inertiajs/svelte';
+    import { Link, router } from '@inertiajs/svelte';
 
     let { bookings = [] } = $props();
 
@@ -12,14 +12,18 @@
             case 'pending': return 'Menunggu Konfirmasi';
             case 'approved': return 'Disetujui';
             case 'rejected': return 'Ditolak';
+            case 'pending_penalty': return 'Menunggu Pembayaran Denda';
+            case 'completed': return 'Selesai';
             default: return status;
         }
     }
 
     function getStatusBadgeColor(status) {
         switch (status) {
-            case 'approved': return 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300';
+            case 'approved': 
+            case 'completed': return 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300';
             case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300';
+            case 'pending_penalty': return 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300';
             case 'rejected': return 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300';
             default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
         }
@@ -27,9 +31,11 @@
 
     function getStatusIcon(status) {
         switch (status) {
-            case 'approved': return CheckCircle2;
+            case 'approved': 
+            case 'completed': return CheckCircle2;
             case 'pending': return Clock;
             case 'rejected': return XCircle;
+            case 'pending_penalty': return AlertCircle;
             default: return AlertCircle;
         }
     }
@@ -48,6 +54,37 @@
             day: 'numeric',
             month: 'short',
             year: 'numeric',
+        });
+    }
+
+    let fileInputs = $state({});
+    let processingIds = $state({});
+
+    function handleFileChange(e, orderId) {
+        if (e.target.files && e.target.files.length > 0) {
+            fileInputs[orderId] = e.target.files[0];
+        } else {
+            fileInputs[orderId] = null;
+        }
+    }
+
+    function handleUploadProof(orderId) {
+        const file = fileInputs[orderId];
+        if (!file) return;
+
+        processingIds[orderId] = true;
+        
+        router.post(`/bookings/${orderId}/return-proof`, {
+            _method: 'post',
+            return_payment_proof: file
+        }, {
+            forceFormData: true,
+            onFinish: () => {
+                processingIds[orderId] = false;
+            },
+            onSuccess: () => {
+                fileInputs[orderId] = null;
+            }
         });
     }
 </script>
@@ -134,12 +171,90 @@
                                                 <span>Transfer Bank</span>
                                             </div>
                                             <div class="pt-2">
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Total Biaya</p>
-                                                <p class="text-xl font-bold text-blue-600 dark:text-blue-400">{formatCurrency(order.total_price)}</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Total Biaya Sewa</p>
+                                                <p class="text-xl font-bold text-blue-600 dark:text-blue-400">
+                                                    {#if order.status === 'completed' || order.status === 'pending_penalty'}
+                                                        {formatCurrency(order.total_price - (order.late_fee + order.damage_fee))}
+                                                    {:else}
+                                                        {formatCurrency(order.total_price)}
+                                                    {/if}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Penalty Payment Section -->
+                                {#if order.status === 'pending_penalty'}
+                                    <div class="mt-6 bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800/50 rounded-xl p-5">
+                                        <div class="flex items-start gap-3">
+                                            <Info class="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
+                                            <div class="flex-1">
+                                                <h4 class="text-sm font-bold text-orange-900 dark:text-orange-300 mb-2">Tagihan Denda Pengembalian</h4>
+                                                
+                                                <div class="space-y-2 mb-4 text-sm text-orange-800 dark:text-orange-200">
+                                                    {#if order.late_fee > 0}
+                                                        <div class="flex justify-between">
+                                                            <span>Biaya Keterlambatan</span>
+                                                            <span class="font-medium">{formatCurrency(order.late_fee)}</span>
+                                                        </div>
+                                                    {/if}
+                                                    {#if order.damage_fee > 0}
+                                                        <div class="flex justify-between">
+                                                            <span>Biaya Kerusakan</span>
+                                                            <span class="font-medium">{formatCurrency(order.damage_fee)}</span>
+                                                        </div>
+                                                    {/if}
+                                                    <div class="flex justify-between pt-2 border-t border-orange-200 dark:border-orange-800/50 font-bold text-base">
+                                                        <span>Total Tagihan Denda</span>
+                                                        <span>{formatCurrency(order.late_fee + order.damage_fee)}</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bg-white dark:bg-gray-900 rounded-lg p-4 mb-4 border border-orange-100 dark:border-orange-800/50">
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Silakan transfer denda ke rekening berikut:</p>
+                                                    <p class="font-bold text-gray-900 dark:text-white text-lg">BCA 123456789</p>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">a.n. Rent Car Berkah</p>
+                                                </div>
+
+                                                <div class="space-y-3">
+                                                    <label for="proof-{order.id}" class="block text-sm font-medium text-orange-900 dark:text-orange-300">
+                                                        Upload Bukti Pembayaran Denda
+                                                    </label>
+                                                    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                                                        <input 
+                                                            type="file" 
+                                                            id="proof-{order.id}" 
+                                                            accept="image/png, image/jpeg, image/jpg"
+                                                            class="block w-full text-sm text-gray-500 dark:text-gray-400
+                                                                file:mr-4 file:py-2.5 file:px-4
+                                                                file:rounded-lg file:border-0
+                                                                file:text-sm file:font-semibold
+                                                                file:bg-orange-600 file:text-white
+                                                                hover:file:bg-orange-700
+                                                                file:cursor-pointer cursor-pointer
+                                                                bg-white dark:bg-gray-900 rounded-lg border border-orange-200 dark:border-orange-800/50"
+                                                            onchange={(e) => handleFileChange(e, order.id)}
+                                                        />
+                                                        <Button 
+                                                            class="w-full sm:w-auto shrink-0" 
+                                                            disabled={!fileInputs[order.id] || processingIds[order.id]}
+                                                            onclick={() => handleUploadProof(order.id)}
+                                                        >
+                                                            {#if processingIds[order.id]}
+                                                                <Clock class="w-4 h-4 mr-2 animate-spin" />
+                                                                Mengunggah...
+                                                            {:else}
+                                                                <Upload class="w-4 h-4 mr-2" />
+                                                                Kirim Bukti
+                                                            {/if}
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/if}
                                 
                                 <!-- Actions -->
                                 {#if order.status === 'approved'}

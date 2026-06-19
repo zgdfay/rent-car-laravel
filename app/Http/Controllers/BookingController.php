@@ -97,7 +97,7 @@ class BookingController extends Controller
         ]);
 
         $booking->update([
-            'status' => Booking::STATUS_COMPLETED,
+            'status' => ($validated['late_fee'] + $validated['damage_fee'] > 0) ? Booking::STATUS_PENDING_PENALTY : Booking::STATUS_COMPLETED,
             'return_date' => $validated['return_date'],
             'late_fee' => $validated['late_fee'],
             'damage_fee' => $validated['damage_fee'],
@@ -111,6 +111,26 @@ class BookingController extends Controller
         }
 
         return back()->with('success', 'Pengembalian mobil berhasil diproses.');
+    }
+
+    public function uploadReturnProof(Request $request, Booking $booking)
+    {
+        $request->validate([
+            'return_payment_proof' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        if ($booking->status !== Booking::STATUS_PENDING_PENALTY || $booking->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $path = $request->file('return_payment_proof')->store('payment-proofs', 'public');
+
+        $booking->update([
+            'return_payment_proof' => $path,
+            'status' => Booking::STATUS_COMPLETED,
+        ]);
+
+        return back()->with('success', 'Bukti pembayaran denda berhasil diunggah.');
     }
 
     public function destroy(Booking $booking)
