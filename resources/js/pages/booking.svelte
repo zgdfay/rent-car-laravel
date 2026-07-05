@@ -17,14 +17,19 @@
         X,
     } from 'lucide-svelte';
     import { Separator } from '@/components/ui/separator/index.js';
-    import { router } from '@inertiajs/svelte';
+    import { page, router } from '@inertiajs/svelte';
+    import { get } from 'svelte/store';
 
     let { car, errors = {} } = $props();
 
+    const currentUser = get(page).props.auth?.user || {};
+
     // Form State
-    let name = $state('');
-    let whatsapp = $state('');
-    let address = $state('');
+    let name = $state(currentUser.name || '');
+    let whatsapp = $state(currentUser.whatsapp || '');
+    let address = $state(currentUser.address || '');
+    let saveBiodata = $state(true);
+    let isEditingBiodata = $state(!currentUser.whatsapp || !currentUser.address);
     let startDate = $state('');
     let endDate = $state('');
     let proofFile = $state(null);
@@ -111,6 +116,7 @@
         formData.append('duration', duration);
         formData.append('total_price', totalPrice);
         formData.append('payment_proof', proofFile);
+        formData.append('save_biodata', saveBiodata ? '1' : '0');
 
         router.post('/booking', formData, {
             forceFormData: true,
@@ -164,45 +170,120 @@
                     <div
                         class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5 sm:p-8 dark:bg-gray-900 dark:ring-white/10"
                     >
-                        <h2
-                            class="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white"
-                        >
-                            <User class="h-5 w-5 text-blue-600" /> Informasi Penyewa
-                        </h2>
-
-                        <div class="space-y-4">
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                <div class="space-y-2">
-                                    <Label for="name">Nama Lengkap</Label>
-                                    <Input
-                                        id="name"
-                                        placeholder="Masukkan nama lengkap"
-                                        bind:value={name}
-                                        required
-                                    />
-                                </div>
-                                <div class="space-y-2">
-                                    <Label for="whatsapp">No. WhatsApp</Label>
-                                    <Input
-                                        id="whatsapp"
-                                        placeholder="Contoh: 08123456789"
-                                        bind:value={whatsapp}
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="space-y-2">
-                                <Label for="address">Alamat Lengkap</Label>
-                                <textarea
-                                    id="address"
-                                    bind:value={address}
-                                    class="flex min-h-[100px] w-full rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-blue-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-800 dark:text-white"
-                                    placeholder="Masukkan alamat lengkap Anda"
-                                    required
-                                ></textarea>
-                            </div>
+                        <div class="mb-6 flex items-center justify-between">
+                            <h2
+                                class="flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white"
+                            >
+                                <User class="h-5 w-5 text-blue-600" /> Informasi Penyewa
+                            </h2>
+                            {#if currentUser.whatsapp && currentUser.address}
+                                <button
+                                    type="button"
+                                    onclick={() => (isEditingBiodata = !isEditingBiodata)}
+                                    class="text-xs font-semibold text-blue-600 underline hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                                >
+                                    {isEditingBiodata
+                                        ? 'Gunakan Biodata Akun'
+                                        : 'Ubah Data Penyewa'}
+                                </button>
+                            {/if}
                         </div>
+
+                        {#if !isEditingBiodata && currentUser.whatsapp && currentUser.address}
+                            <div
+                                class="space-y-3 rounded-2xl border border-blue-100 bg-blue-50/50 p-4 dark:border-blue-900/30 dark:bg-blue-900/10"
+                            >
+                                <div class="flex items-center justify-between">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
+                                    >
+                                        <ShieldCheck
+                                            class="h-3.5 w-3.5 text-blue-600 dark:text-blue-400"
+                                        />
+                                        Menggunakan Biodata Akun
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+                                    <div>
+                                        <span
+                                            class="block text-xs text-gray-500 dark:text-gray-400"
+                                            >Nama Lengkap</span
+                                        >
+                                        <span
+                                            class="font-semibold text-gray-900 dark:text-white"
+                                            >{name}</span
+                                        >
+                                    </div>
+                                    <div>
+                                        <span
+                                            class="block text-xs text-gray-500 dark:text-gray-400"
+                                            >No. WhatsApp</span
+                                        >
+                                        <span
+                                            class="font-semibold text-gray-900 dark:text-white"
+                                            >{whatsapp}</span
+                                        >
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-gray-500 dark:text-gray-400"
+                                        >Alamat Lengkap</span
+                                    >
+                                    <span class="font-semibold text-gray-900 dark:text-white"
+                                        >{address}</span
+                                    >
+                                </div>
+                            </div>
+                        {:else}
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                    <div class="space-y-2">
+                                        <Label for="name">Nama Lengkap</Label>
+                                        <Input
+                                            id="name"
+                                            placeholder="Masukkan nama lengkap"
+                                            bind:value={name}
+                                            required
+                                        />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label for="whatsapp">No. WhatsApp</Label>
+                                        <Input
+                                            id="whatsapp"
+                                            placeholder="Contoh: 08123456789"
+                                            bind:value={whatsapp}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <Label for="address">Alamat Lengkap</Label>
+                                    <textarea
+                                        id="address"
+                                        bind:value={address}
+                                        class="flex min-h-[100px] w-full rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-blue-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-800 dark:text-white"
+                                        placeholder="Masukkan alamat lengkap Anda"
+                                        required
+                                    ></textarea>
+                                </div>
+
+                                <div class="flex items-center gap-2 pt-1">
+                                    <input
+                                        type="checkbox"
+                                        id="saveBiodata"
+                                        bind:checked={saveBiodata}
+                                        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                    />
+                                    <label
+                                        for="saveBiodata"
+                                        class="cursor-pointer text-xs text-gray-600 dark:text-gray-400"
+                                    >
+                                        Simpan perubahan kontak ini ke Profil Biodata saya
+                                    </label>
+                                </div>
+                            </div>
+                        {/if}
                     </div>
 
                     <div

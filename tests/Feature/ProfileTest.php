@@ -33,6 +33,28 @@ test('profile information can be updated', function () {
     $this->assertNull($user->email_verified_at);
 });
 
+test('profile biodata (whatsapp and address) can be updated', function () {
+    $user = User::factory()->create();
+
+    $response = $this
+        ->actingAs($user)
+        ->patch('/profile', [
+            'name' => 'Test User',
+            'email' => $user->email,
+            'whatsapp' => '081234567890',
+            'address' => 'Jl. Kolonel Sugiono 3, Pasuruan',
+        ]);
+
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/profile');
+
+    $user->refresh();
+
+    $this->assertSame('081234567890', $user->whatsapp);
+    $this->assertSame('Jl. Kolonel Sugiono 3, Pasuruan', $user->address);
+});
+
 test('email verification status is unchanged when the email address is unchanged', function () {
     $user = User::factory()->create();
 

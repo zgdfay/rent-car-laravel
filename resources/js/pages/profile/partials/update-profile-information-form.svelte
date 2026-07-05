@@ -12,8 +12,10 @@
     const user = get(page).props.auth.user;
 
     const form = useForm({
-        name: user.name,
-        email: user.email,
+        name: user.name || "",
+        email: user.email || "",
+        whatsapp: user.whatsapp || "",
+        address: user.address || "",
     });
 
     // Function to handle form submission
@@ -70,6 +72,35 @@
             />
             {#if $form.errors.email}
                 <InputError class="mt-2" message={$form.errors.email} />
+            {/if}
+        </div>
+
+        <!-- WhatsApp -->
+        <div>
+            <Label for="whatsapp">No. WhatsApp</Label>
+            <Input
+                id="whatsapp"
+                type="text"
+                class="mt-1 block w-full"
+                bind:value={$form.whatsapp}
+                placeholder="Contoh: 081234567890"
+            />
+            {#if $form.errors.whatsapp}
+                <InputError class="mt-2" message={$form.errors.whatsapp} />
+            {/if}
+        </div>
+
+        <!-- Address -->
+        <div>
+            <Label for="address">Alamat Lengkap</Label>
+            <textarea
+                id="address"
+                bind:value={$form.address}
+                class="mt-1 flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-100"
+                placeholder="Masukkan alamat lengkap Anda"
+            ></textarea>
+            {#if $form.errors.address}
+                <InputError class="mt-2" message={$form.errors.address} />
             {/if}
         </div>
 

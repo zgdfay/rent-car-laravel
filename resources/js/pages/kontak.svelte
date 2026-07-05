@@ -160,8 +160,8 @@
                                     <span class="text-lg">Alamat Kantor</span>
                                 </dt>
                                 <dd class="mt-2 text-base text-gray-600 dark:text-gray-400">
-                                    Jl. Jend. Sudirman No. 45<br />
-                                    Jakarta Selatan, 12190<br />
+                                    Jl. Kolonel Sugiono 3<br />
+                                    Pasuruan, 67142<br />
                                     Indonesia
                                 </dd>
                             </div>
@@ -173,11 +173,10 @@
                                     >
                                         <Phone class="h-6 w-6" />
                                     </div>
-                                    <span class="text-lg">Telepon Peayanan</span>
+                                    <span class="text-lg">Telepon Pelayanan</span>
                                 </dt>
                                 <dd class="mt-2 text-base text-gray-600 dark:text-gray-400">
-                                    +62 811 1234 5678 (WhatsApp Aktif 24/7)<br />
-                                    (021) 555-0198
+                                    +62 813 3333 2215 (WhatsApp Aktif 24/7)
                                 </dd>
                             </div>
 

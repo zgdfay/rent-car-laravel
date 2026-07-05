@@ -25,7 +25,19 @@ class BookingController extends Controller
             'duration' => 'required|integer|min:1',
             'total_price' => 'required|integer|min:0',
             'payment_proof' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'save_biodata' => 'nullable|boolean',
         ]);
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            if (!empty($validated['save_biodata']) || empty($user->whatsapp) || empty($user->address)) {
+                $user->update([
+                    'name' => $validated['name'],
+                    'whatsapp' => $validated['whatsapp'] ?: $user->whatsapp,
+                    'address' => $validated['address'] ?: $user->address,
+                ]);
+            }
+        }
 
         // Store the payment proof image
         $path = $request->file('payment_proof')->store('payment-proofs', 'public');
